@@ -4,7 +4,7 @@ on:
 
 jobs:
   download:
-    name: Download Flutter
+    name: Build for Linux
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v3
