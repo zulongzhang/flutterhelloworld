@@ -6,7 +6,7 @@ on:
 
 jobs:
   linux:
-    name: Build for Linux
+    name: Build for Ubuntu 22.04
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v3
@@ -23,7 +23,25 @@ jobs:
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        with:
-         file: "builds.zip"
+         file: "build-linux.zip"
          tags: true
          draft: true
-
+  build:
+   name: Build for Microsoft Windows
+   runs-on: windows-latest
+   steps:
+     - uses: actions/checkout@v3
+     - uses: subosito/flutter-action@v2
+       with:
+         channel: 'stable'
+     - run: flutter config --enable-windows-desktop
+     - run: flutter build windows
+     - run: tar.exe -a -c -f build-windows.zip build/*
+     - uses: xresloader/upload-to-github-release@v1
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+         file: "build-windows.zip"
+         tags: true
+         draft: true
+     
