@@ -14,22 +14,16 @@ jobs:
        with:
          channel: 'stable'
      - run: |
-        echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
-        echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
-        echo CHANNEL=${{ steps.flutter-action.outputs.CHANNEL }}
-        echo VERSION=${{ steps.flutter-action.outputs.VERSION }}
-        echo ARCHITECTURE=${{ steps.flutter-action.outputs.ARCHITECTURE }}
-     - run: |
         sudo apt-get update -y
         sudo apt-get install -y ninja-build libgtk-3-dev
      - run: flutter config --enable-linux-desktop
      - run: flutter build linux
-     - run: zip -r builds.zip .
+     - run: zip -r builds.zip ./build
      - uses: xresloader/upload-to-github-release@v1
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        with:
-         file: "*"
+         file: "builds.zip"
          tags: true
          draft: true
 
