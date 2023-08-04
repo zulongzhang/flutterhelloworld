@@ -19,13 +19,23 @@ jobs:
      - run: flutter config --enable-linux-desktop
      - run: flutter build linux
      - run: zip -r build-linux.zip ./build
-     - uses: xresloader/upload-to-github-release@v1
+     #- uses: xresloader/upload-to-github-release@v1
+     #  env:
+     #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     #  with:
+     #    file: "build-linux.zip"
+     #    tags: true
+     #    draft: true
+     - uses: WebFreak001/deploy-nightly@v2.0.0
        env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
        with:
-         file: "build-linux.zip"
-         tags: true
-         draft: true
+          upload_url: https://uploads.github.com/repos/zulongzhang/flutterhelloworld/releases/115065203/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
+          release_id: 115065203 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+          asset_path: ./build-linux.zip # path to archive to upload
+          asset_name: linux-nightly-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
+          asset_content_type: application/zip # required by GitHub API
+          max_releases: 4 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
   build:
    name: Build for Microsoft Windows
    runs-on: windows-latest
@@ -37,11 +47,22 @@ jobs:
      - run: flutter config --enable-windows-desktop
      - run: flutter build windows
      - run: tar.exe -a -c -f build-windows.zip build/*
-     - uses: xresloader/upload-to-github-release@v1
+   #  - uses: xresloader/upload-to-github-release@v1
+   #    env:
+   #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+   #    with:
+   #      file: "build-windows.zip"
+   #      tags: true
+   #      draft: true
+     - uses: WebFreak001/deploy-nightly@v2.0.0
        env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
        with:
-         file: "build-windows.zip"
-         tags: true
-         draft: true
+          upload_url: https://uploads.github.com/repos/zulongzhang/flutterhelloworld/releases/115065203/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
+          release_id: 115065203 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+          asset_path: ./build-windows.zip # path to archive to upload
+          asset_name: windows-nightly-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
+          asset_content_type: application/zip # required by GitHub API
+          max_releases: 4 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+
      
